@@ -1,0 +1,9 @@
+---
+
+  - name: Update OS (Debian)
+    shell: apt update
+    when: ansible_os_family == "Debian"
+
+  - name: Update OS (Redhat)
+    shell: yum install
+    when: ansible_os_family == "Redhat"

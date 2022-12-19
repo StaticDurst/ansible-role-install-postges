@@ -1,0 +1,5 @@
+---
+# defaults file for install_postgres
+
+postresql_version: "15"
+postgres_password: '123456'

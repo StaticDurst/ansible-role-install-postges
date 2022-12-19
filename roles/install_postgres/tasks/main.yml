@@ -1,0 +1,6 @@
+---
+# tasks file for install_postgres
+- include_tasks: default_settings.yml
+- include_tasks: repo.yml
+- include_tasks: package.yml
+- include_tasks: config_postgres.yml

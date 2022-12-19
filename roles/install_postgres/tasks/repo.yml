@@ -1,0 +1,18 @@
+---
+  - name: Add PGDG key for Postgres (Debian)
+    get_url:
+      url: https://www.postgresql.org/media/keys/ACCC4CF8.asc
+      dest: /etc/apt/pgdg.asc
+    retries: 5
+    delay: 5
+    when: ansible_os_family == "Debian"
+
+  - name: Add repo for postgres (debian)
+    shell: echo "deb http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list
+#     apt_repository: repo='deb http://apt.postgresql.org/pub/repos/apt/ precise-pgdg main'
+#    apt_repository:
+#      repo: deb http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list'
+#      update_cache: true
+    retries: 5
+    delay: 5
+    when: ansible_os_family == "Debian"

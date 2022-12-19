@@ -1,0 +1,42 @@
+---
+
+ - name: my_date_time
+   set_fact:
+     my_date_time: "{{ '%Y-%m-%d_%H:%M:%S' | strftime(ansible_date_time.epoch) }}"
+
+ - name: Creating a directory
+   ansible.builtin.file:
+     path: "/tmp/backup/{{ my_date_time  }}"
+     state: directory
+
+ - name: copy config file
+   shell: cp /etc/postgresql/15/main/*.conf "/tmp/backup/{{ my_date_time  }}"
+
+# - name: open TCP port 5432
+#   community.general.ufw:
+#     rule: allow
+#     port: '5432'
+#     proto: tcp
+#   when: ansible_os_family == "Debian"
+
+ - name: enable PostgreSQL is listening on *
+   lineinfile:
+     dest: /etc/postgresql/15/main/postgresql.conf
+     regexp: '^listen_addresses\s*='
+     line: "listen_addresses='*'"
+     state: present
+   notify: Restart Postgresql
+
+ - name: Add new configuration to "pg_hba.conf"
+   blockinfile:
+     dest: /etc/postgresql/15/main/pg_hba.conf
+     block: |
+       host    all             all             0.0.0.0/0                md5
+       host    all             all             ::/0                     md5
+   notify: Restart Postgresql
+
+ - name: change postgres password
+   ansible.builtin.user:
+     name: "postgres"
+     state: present
+     password: "{{ postgres_password | password_hash('sha512') }}"

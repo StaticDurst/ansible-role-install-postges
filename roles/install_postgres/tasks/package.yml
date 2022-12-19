@@ -1,0 +1,10 @@
+---
+
+  - name: Install package for postgres
+    apt:
+      pkg:
+      - postgresql-client-common
+      - postgresql-common
+      - postgresql-15
+      state: present
+    when: ansible_os_family == "Debian"
